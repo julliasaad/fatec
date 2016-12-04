@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta charset="UTF-8" />
+</h:head>
+<h:body>
+
+	<p:link value="Menu" outcome="menu" />
+	<h:form id="formCurso">
+
+		<p:panelGrid columns="2">
+			<p:outputLabel value="Código:" />
+			<p:inputText value="#{cursoManagedBean.curso.codigo}" />
+			<p:outputLabel value="Nome:" />
+			<p:inputText value="#{cursoManagedBean.curso.nome}" />
+			<h:outputText value="Presencial: " />
+			<p:inputSwitch value="#{cursoManagedBean.curso.presencial}" />
+		</p:panelGrid>
+
+		<p:commandButton value="Salvar" action="#{cursoManagedBean.salvar}"
+			update=":formCurso, :formTableCursos" />
+	</h:form>
+
+	<h:form id="formTableCursos">
+
+		<p:growl id="msgs" showDetail="true" />
+
+
+		<p:dataTable value="#{cursoManagedBean.cursos}" var="cur"
+			editable="true" id="tableCursos">
+
+			<p:ajax event="rowEdit" listener="#{cursoManagedBean.onRowEdit}" />
+
+			<p:column headerText="Código">
+				<h:outputText value="#{cur.codigo}" />
+			</p:column>
+
+			<p:column headerText="Nome">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{cur.nome}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="nome" value="#{cur.nome}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Presencial">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{cur.presencial}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="presencial" value="#{cur.presencial}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column style="width:70px" headerText="Opções">
+				<p:rowEditor />
+				<p:commandLink id="remover" styleClass="ui-icon ui-icon-trash"
+					style="text-align:center"
+					actionListener="#{cursoManagedBean.remove(cur)}"
+					update=":formTableCursos, :formTableCursos:msgs" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+</h:body>
+</html>
